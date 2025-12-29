@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, Zap } from "lucide-react";
+import { toast } from "sonner";
 
 const ErrorButton = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,10 +14,21 @@ const ErrorButton = () => {
     
     setIsLoading(false);
     
-    // Trigger a realistic runtime error - calling a method on undefined
-    const userData = undefined as any;
-    console.log("Attempting to access user data...");
-    userData.profile.name.toUpperCase();
+    try {
+      // Trigger a realistic runtime error - calling a method on undefined
+      const userData = undefined as any;
+      console.log("Attempting to access user data...");
+      userData.profile.name.toUpperCase();
+    } catch (error) {
+      // Show red toast notification
+      toast.error("Something went wrong", {
+        description: "Failed to process your request. Please try again.",
+      });
+      
+      // Re-throw the error so it still appears in browser console
+      console.error("Error occurred:", error);
+      throw error;
+    }
   };
 
   return (
